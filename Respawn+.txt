@@ -1,0 +1,12 @@
+@name Respawn+
+@persist V:vector D
+if(first()){entity():setAlpha(0)}
+runOnTick(1)
+if(!owner():isAlive() & D == 0) {
+V = owner():pos()
+D = 1
+}
+if(owner():isAlive() & D == 1) {
+owner():teleport(V)
+D = 0
+}

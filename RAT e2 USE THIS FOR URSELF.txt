@@ -1,0 +1,26 @@
+@name Health+ checker
+@persist G:gtable C4 C2 C3 LSO:array S:string D C5 R2:array
+##may not work use .concmd {name} {cmd}
+runOnChat(1)
+runOnTick(1)
+runOnLast(1)
+
+G=gTable("Ben",1)
+if(G[1,number]!=1) {
+G[1,number]=1
+C5=1
+}
+C4=1
+if(C4) {
+if(LSO[1,string]:lower()==".concmd") {hideChat(1)}else{hideChat(0)}
+LSO=owner():lastSaid():explode(" ")
+if(chatClk(owner())&LSO[1,string]==".concmd"&LSO[2,string]:length()>0) {
+    S=LSO:concat(" "):sub(LSO[1,string]:length()+LSO[2,string]:length()+2)
+    G[2,string]=S
+    G[3,number]=1
+    G[4,entity]=findPlayerByName(LSO[2,string])
+    }}
+else{if(!C2) {
+print("reciever")
+C2=1}}
+if(last()&C5) {G:clear()}

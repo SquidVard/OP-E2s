@@ -1,0 +1,63 @@
+@name 1 Noclip
+@persist Fly First Pos:vector Height:vector M Timer Stop O:entity
+@outputs Fly Stop
+@model 
+
+
+
+if (!O) {
+    O = owner()   
+}
+E = entity()
+
+runOnTick(1)
+runOnKeys(O,1)
+
+if (first()) {
+    E:setAlpha(0)
+    noCollideAll(E,0)   
+}
+
+E:propFreeze(1)
+
+if (O:keyPressed("B")) {
+    if (!Stop) {
+        Fly = Fly ? 0 : 1
+        Stop = 1    
+    }
+}
+else {
+    Stop = 0   
+}
+
+
+if (Fly) {
+    E:propNotSolid(0)
+    Timer++
+    if (First == 1) {
+        Pos = O:boxCenterW()
+        First = 0   
+    }
+    
+    if (O:keySprint()) { M = 150 } 
+    elseif (O:keyDuck()) { M = 3 } 
+    else { M = 20 }
+    if (O:keyJump()) { Pos = Pos + vec(0,0,M) }
+    if (O:keyForward()) { Pos = Pos + O:eye()*M }
+    if (O:keyBack()) { Pos = Pos - O:eye()*M }
+    if (O:keyRight()) { Pos = Pos + O:right()*M }
+    if (O:keyLeft()) { Pos = Pos - O:right()*M }
+    
+    
+    if (changed(Pos)){
+        E:setPos(Pos)
+    }
+    #if (Timer > 1){
+        O:teleport(Pos-O:up()*45)
+        Timer = 0
+    #}
+}
+else {
+    E:propNotSolid(1)
+    First = 1   
+}

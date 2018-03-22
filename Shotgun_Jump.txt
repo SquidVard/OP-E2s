@@ -1,0 +1,14 @@
+@name Shotgun Jump
+@persist X
+runOnTick(1)
+if(X < 100) {
+X = X + 10
+}
+if(owner():weapon():toString():find("shot") & owner():keyAttack1() & X == 100 & owner():weapon():clip1() > 0){
+    owner():applyPlayerForce(vec(0,0,1000) + (vec(-1000,0,0):rotate(owner():eyeAngles())))
+    X = 0
+}
+if(owner():weapon():toString():find("shot")) {
+owner():disableFallDamage()
+}
+else {owner():enableFallDamage()}

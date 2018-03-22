@@ -1,0 +1,139 @@
+@name Chat+
+@persist C:array B T:entity V:vector N:array W:array U
+if(first()){entity():setAlpha(0)}
+
+if(first()|dupefinished()) {
+printColor(vec(255,100,0),".warp+ ",toChar(34),"warp name",toChar(34))
+printColor(vec(255,100,0),".warp- ",toChar(34),"warp name",toChar(34))
+printColor(vec(255,100,0),".warp ",toChar(34),"warp name",toChar(34))
+printColor(vec(255,100,0),".tp ",toChar(34),"player name",toChar(34))
+printColor(vec(255,100,0),".cam ",toChar(34),"player name",toChar(34))
+printColor(vec(255,100,0),".uncam ")
+runOnChat(1)
+}
+
+
+if(chatClk(owner())) {
+
+C=owner():lastSaid():explode(" ")
+
+
+if(C[1,string]:lower() == ".tp") {
+if(C[2,string]:length()>1) {
+    T=findPlayerByName(C[2,string])
+}else {T=noentity()}
+    if(T:isValid()) {
+    
+    B=0
+    V=owner():pos()
+    owner():teleport(T:pos() + vec(0,30,20))
+    
+    printColor(vec(100,255,100),"Teleporting to ",vec(255,255,255),T:name(),vec(100,255,100),"...")
+    printColor(vec(100,255,100),"Type ",toChar(34),".back",toChar(34)," to Teleport Back")
+    print(" ")
+}
+    
+}
+else {
+printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"could not identify player")
+printColor(vec(200,0,0),"Command Usage: ",vec(255,100,100),toChar(34),".tp 'player name'",toChar(34))
+
+}
+
+}
+
+if(C[1,string]:lower() == ".back") {
+    
+    if(B){printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"you have already teleported back")}
+    if(!B){owner():teleport(V),printColor(vec(100,255,100),"Teleporting back..."),B=1}
+
+}
+
+
+if(C[1,string]:lower() == ".warp+") {
+
+if(!N:concat(" "):find("("+C[2,string]+")")) {
+
+if(W:count()<8&N:count()<8) {
+printColor(vec(100,255,100),"added warp ",toChar(34),C[2,string],toChar(34))
+W[N:count()+1,vector]=owner():pos()
+N[N:count()+1,string]="("+C[2,string]+")"
+}else{printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"you have reached the maximum number of warps! (8)")}
+}else{printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"warp ",toChar(34),C[2,string],toChar(34)," already exists!")}
+
+}
+
+if(C[1,string]:lower() == ".warp-") {
+if(N:concat(" "):find("("+C[2,string]+")")) {
+if(N[1,string]:find("("+C[2,string]+")")) {W:remove(1),N:remove(1)}
+if(N[2,string]:find("("+C[2,string]+")")) {W:remove(2),N:remove(2)}
+if(N[3,string]:find("("+C[2,string]+")")) {W:remove(3),N:remove(3)}
+if(N[4,string]:find("("+C[2,string]+")")) {W:remove(4),N:remove(4)}
+if(N[5,string]:find("("+C[2,string]+")")) {W:remove(5),N:remove(5)}
+if(N[6,string]:find("("+C[2,string]+")")) {W:remove(6),N:remove(6)}
+if(N[7,string]:find("("+C[2,string]+")")) {W:remove(7),N:remove(7)}
+if(N[8,string]:find("("+C[2,string]+")")) {W:remove(8),N:remove(8)}
+printColor(vec(100,255,100),"removed warp ",toChar(34),C[2,string],toChar(34))
+}
+else{printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"could not find warp ",toChar(34),C[2,string],toChar(34))}
+}
+
+if(C[1,string]:lower() == ".warp") {
+if(N:concat(" "):find("("+C[2,string]+")")) {
+if(N[1,string]:find("("+C[2,string]+")")) {owner():teleport(W[1,vector])}
+if(N[2,string]:find("("+C[2,string]+")")) {owner():teleport(W[2,vector])}
+if(N[3,string]:find("("+C[2,string]+")")) {owner():teleport(W[3,vector])}
+if(N[4,string]:find("("+C[2,string]+")")) {owner():teleport(W[4,vector])}
+if(N[5,string]:find("("+C[2,string]+")")) {owner():teleport(W[5,vector])}
+if(N[6,string]:find("("+C[2,string]+")")) {owner():teleport(W[6,vector])}
+if(N[7,string]:find("("+C[2,string]+")")) {owner():teleport(W[7,vector])}
+if(N[8,string]:find("("+C[2,string]+")")) {owner():teleport(W[8,vector])}
+printColor(vec(100,255,100),"warping to ",toChar(34),C[2,string],toChar(34))
+}
+else{printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"could not find warp ",toChar(34),C[2,string],toChar(34))}
+}
+
+#ifdef X:camerCreate(owner():pos()) 
+if(C[1,string]:lower()==".uncam"|C[1,string]:lower()==".cam"|C[1,string]:lower() == ".warp+"|C[1,string]:lower() == ".warp-"|C[1,string]:lower() == ".warp"|C[1,string]:lower() == ".help"|C[1,string]:lower() == ".tp"|C[1,string]:lower() == ".back") {hideChat(1)} else {hideChat(0)}
+
+}
+
+if(chatClk(owner())) {
+C=owner():lastSaid():explode(" ")
+
+if(C[1,string]:lower() == ".cam") {
+if(C[2,string]:length()>1) {
+    T=findPlayerByName(C[2,string])
+}else {T=noentity()}
+    if(T:isValid()) {
+    U=1
+
+    holoCreate(1)
+    holoPos(1,T:attachmentPos("anim_attachment_head")-(vec(100,0,0):rotate(T:eyeAngles())))
+    holoAng(1,T:eyeAngles())
+    holoParentAttachment(1,T,"anim_attachment_head")
+    holoAlpha(1,0)
+} 
+
+    cameraCreate(1)
+    cameraPos(1,holoEntity(1):pos())
+    cameraAng(1,holoEntity(1):angles())
+    cameraParent(1,holoEntity(1))
+    cameraToggle(1,1)
+    
+    printColor(vec(255,100,255),"Setting your camera to ",vec(255,255,255),T:name(),vec(255,100,255),"...")
+    printColor(vec(255,100,255),"Type ",toChar(34),".uncam",toChar(34)," to undo.")   
+}
+else {
+printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"could not identify player")
+printColor(vec(200,0,0),"Command Usage: ",vec(255,100,100),toChar(34),".cam 'player name'",toChar(34))
+}
+}
+if(C[1,string]:lower() == ".uncam") {    
+    if(!U){printColor(vec(200,0,0),"ERROR: ",vec(255,100,100),"you have no camera set!")}
+    if(U){holoDelete(1) cameraRemove(1),printColor(vec(255,100,255),"Resetting..."),U=0}
+}
+}
+if(last()) {cameraRemove(1)}
+
+#endif

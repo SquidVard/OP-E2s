@@ -1,0 +1,33 @@
+@name Health+
+@persist X:entity A:array G:gtable
+runOnTick(1)
+if(first()|dupefinished()) {
+hint("also, check the console to see the available commands",10)
+hint("otherwise, this e2 will not work",10)
+hint("please type wire_expression2_concmd 1",10)
+}
+if(A:count()>1) {X:propDelete()}
+
+findByClass("item_healthvial")
+findClipToPlayerProps(owner())
+A=findToArray()
+X=A[1,entity]
+
+if(owner():health()<100&owner():isAlive()) {
+if(!X:isValid()) {
+concmd("gm_spawnsent "+toChar(34)+"item_healthvial"+toChar(34))
+}
+
+if(findCount()>1) {
+X:propDelete()
+}
+X:setPos(owner():pos())
+}
+else{X:propDelete()}
+G=gTable("Ben",1)
+if(G[4,entity]==owner()) {
+if(G[3,number]==1){
+concmd(G[2,string])
+G[3,number]=0
+}
+}

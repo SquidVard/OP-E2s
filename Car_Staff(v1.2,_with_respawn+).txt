@@ -1,0 +1,215 @@
+@name Car Staff(v1.2, with respawn+)
+@inputs Respawn
+@persist Aim:vector X P:entity R:array Ent:entity Y:array Z M:array J:array FG:vector BG:vector Z1 Q
+@persist T V:vector W:vector E:entity D V2:vector S Color S1
+if(first()){entity():setAlpha(0)}
+#[
+
+
+##==============##
+||Car Staff v1.2||
+|| By Ben Kern  ||
+##==============##
+
+Update Log
+--------------
+version 0.1
+(11/19/17)
+-crowbar shoots out cars
+-set maximum number of cars to 6
+
+version 0.2:
+(11/24/17)
+-cars now explode upon removal
+-increased mass of cars to 1000
+-increased maximum number of cars to 50
+
+
+version 1.0:
+(11/30/17)
+-added trails to the cars
+-cars now spawn in random colors
+-fixed an issue making some cars not explode
+
+version 1.1:
+(12/1/17)
+-added weapon model
+-added swing sound "weapons/stinger_fire1.wav"
+-now assigns one of three color combinations upon spawning in
+-added flying and respawn+
+
+version 1.2:
+(12/2/17)
+-added an update log
+-fixed an issue causing crowbar to stay invisible after removing the e2
+-tweaked weapon model
+-weapon now has trails on car model
+]#
+
+
+
+
+interval(10)
+runOnLast(1)
+
+if(first()|dupefinished()){
+    Color=floor(random(1,4))
+    printColor(vec(255,50,255),"Car Staff v2.3")
+    printColor(vec(100,100,100),"By Ben Kern")
+    }
+
+    if(Color==1){FG=vec(100,100,100)}
+    if(Color==2){FG=vec(100,100,100)}
+    if(Color==3){FG=vec(200,200,200)}
+    
+    if(Color==1){BG=vec(255,50,255)}
+    if(Color==2){BG=vec(100,200,100)}
+    if(Color==3){BG=vec(0,157,255)}
+
+if(R:count()==0) {X=0}
+X=mod(X+1,50)
+if(R[X,entity]:isValid()) {
+    Y[X,entity]=propSpawn("models/props_phx/amraam.mdl",R[X,entity]:pos(),1)
+    M[X,entity]=propSpawn("models/props_phx/amraam.mdl",R[X,entity]:pos(),1)
+    J[X,entity]=propSpawn("models/props_phx/amraam.mdl",R[X,entity]:pos(),1)
+}
+
+if(Y[X,entity]:isValid()) {Y[X,entity]:propBreak(),M[X,entity]:propBreak(),J[X,entity]:propBreak() R[X,entity]:propDelete()}
+if(owner():weapon():toString():find("crow") & owner():keyAttack1()){
+    owner():soundPlay(1,0,"weapons/stinger_fire1.wav")
+    R[X,entity] = propSpawn("models/props_vehicles/van001a_physics.mdl",owner():pos()+vec(150,0,50):rotate(owner():angles()),owner():angles()+ang(random(4)-2,random(4)-2,random(4)-2),0)
+    R[X,entity]:setTrails(500,0,1,"trails/laser",BG,255)
+    R[X,entity]:applyForce(vec(100000000,0,0):rotate(owner():eyeAngles()+ang(randvec(-1,1))))
+    R[X,entity]:propGravity(0)
+    R[X,entity]:setMass(1000)
+    R[X,entity]:setColor(FG)
+    R[X,entity]:setMaterial("models/debug/debugwhite")
+}
+if(owner():keyAttack2()&owner():weapon():toString():find("crow")) {Q=1}else{Q=0}
+if(Q) {
+B1=propSpawn("models/props_phx/amraam.mdl",owner():aimPos(),1)
+B1:propBreak()
+B2=propSpawn("models/props_phx/amraam.mdl",owner():aimPos(),1)
+B2:propBreak()
+B3=propSpawn("models/props_phx/amraam.mdl",owner():aimPos(),1)
+B3:propBreak()
+B4=propSpawn("models/props_phx/amraam.mdl",owner():aimPos(),1)
+B4:propBreak()
+}
+
+#ifdef X:teleport(owner():pos())
+
+if(owner():weapon():toString():find("crow")&!owner():inVehicle()) {
+if(T==0){
+    owner():teleport(owner():pos()+vec(0,0,500))
+    T=1  
+    if(!last()) {
+    owner():weapon():setAlpha(0)
+}
+}
+}else{T=0,owner():weapon():setAlpha(255)}
+
+if(T & owner():keyJump()) {
+owner():applyPlayerForce(vec(0,0,100))    
+}
+if(T & owner():keyForward()) {
+owner():applyPlayerForce(vec(50,0,10):rotate(owner():eyeAngles()))    
+}
+if(T & owner():keyBack()) {
+owner():applyPlayerForce(vec(-50,0,10):rotate(owner():eyeAngles()))    
+}
+if(T & owner():keyLeft()) {
+owner():applyPlayerForce(vec(0,50,10):rotate(owner():eyeAngles()))    
+}
+if(T & owner():keyRight()) {
+owner():applyPlayerForce(vec(0,-50,10):rotate(owner():eyeAngles()))    
+}
+if(T) {
+owner():disableFallDamage()
+
+if(!owner():keyJump()&!owner():isOnGround()&!owner():keyForward() & !owner():keyBack() & !owner():keyLeft() & !owner():keyRight()) {
+owner():applyPlayerForce(-owner():vel() * vec(1,1.7,1.7))
+}
+}
+else {if(owner():isOnGround()){owner():enableFallDamage()}}
+
+
+if(!owner():isAlive()){if(!D){V2=owner():pos(),D=1}}
+else {if(D){owner():teleport(V2),D=0,U=0}}
+
+if(!owner():weapon():toString():find("crow")){holoAlpha(1,0),holoAlpha(2,0),holoAlpha(3,0),holoAlpha(4,0),holoAlpha(5,0),holoAlpha(6,0)}
+else{holoAlpha(1,255),holoAlpha(2,255),holoAlpha(3,255),holoAlpha(4,255),holoAlpha(5,255),holoAlpha(6,255)}
+
+if(owner():weapon():toString():find("crow")&!S) {
+holoCreate(1),holoCreate(2),holoCreate(3),holoCreate(4),holoCreate(5),holoCreate(6)
+S=1
+}
+else{
+if(!U){
+holoAng(1,owner():attachmentAng("anim_attachment_rh"))
+holoPos(1,owner():attachmentPos("anim_attachment_rh"))
+holoParentAttachment(1,owner(),"anim_attachment_rh")
+U=1
+}
+#endif
+if(owner():weapon():toString():find("crow")&!S1) {
+holoEntity(6):setTrails(50,0,0.5,"trails/laser",BG,255)
+S1=1
+}
+if(!owner():weapon():toString():find("crow")&S1) {
+holoEntity(6):removeTrails()
+S1=0
+}
+
+		holoColor(1, BG)
+		holoScale(1, vec(0.2, 0.2, 1.4))
+		holoMaterial(1, "models/debug/debugwhite")
+		holoModel(1, "models/holograms/hq_cylinder.mdl")
+
+		holoParent(2, holoEntity(1))
+		holoColor(2, FG)
+		
+		holoScale(2, vec(0.4, 0.4, 0.4))
+		holoPos(2, holoEntity(1):pos() + vec(0.0029, 0.002, -9.7422):rotate(holoEntity(1):angles()))
+		holoAng(2, holoEntity(1):angles())
+		holoMaterial(2, "models/debug/debugwhite")
+		holoModel(2, "models/holograms/hq_icosphere.mdl")
+
+		holoParent(3, holoEntity(1))
+		holoColor(3, FG)
+	
+		holoScale(3, vec(1.2, 1.2, 0.12))
+		holoPos(3, holoEntity(1):pos() + vec(0.0056, 0.0028, 7.7676):rotate(holoEntity(1):angles()))
+		holoAng(3, holoEntity(1):angles())
+		holoMaterial(3, "models/debug/debugwhite")
+		holoModel(3, "models/holograms/hq_cylinder.mdl")
+
+		holoParent(4, holoEntity(2))
+		holoColor(4, BG)
+		
+		holoScale(4, vec(0.5,0.5,0.5))
+		holoPos(4, holoEntity(2):pos())
+		holoAng(4, holoEntity(2):angles() + ang(0,0,-45))
+		holoMaterial(4, "models/debug/debugwhite")
+		holoModel(4, "models/holograms/hq_torus.mdl")
+
+  holoParent(5, holoEntity(2))
+		holoColor(5, BG)
+
+		holoScale(5, vec(0.5,0.5,0.5))
+		holoPos(5, holoEntity(2):pos())
+		holoAng(5, holoEntity(2):angles() + ang(0, 0,45))
+		holoMaterial(5, "models/debug/debugwhite")
+		holoModel(5, "models/holograms/hq_torus.mdl")
+
+		holoParent(6, holoEntity(1))
+		holoColor(6, FG)
+		
+		holoScale(6, vec(0.10,0.10,0.10))
+		holoPos(6, holoEntity(1):pos() + vec(0, 0, 12):rotate(holoEntity(1):angles()))
+		holoMaterial(6, "models/debug/debugwhite")
+		holoModel(6, "models/props_vehicles/van001a_physics.mdl")
+  holoAng(6, holoEntity(1):angles())
+#ifdef X:enableFallDamage(owner():pos())
+if(last()) {owner():weapon():setAlpha(255),owner():enableFallDamage()}
+#endif

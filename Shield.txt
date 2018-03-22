@@ -1,0 +1,277 @@
+@name Shield
+@persist Owner:entity [Prop,Shield]:table
+@persist Sound Cooldown On
+@model
+if(first()){entity():setAlpha(0)}
+if(first() || duped())
+{
+    runOnTick(1)
+    runOnChat(1)
+    propSpawnUndo(0)
+    propSpawnEffect(0)
+    
+    Owner = owner()
+    On = 1
+    
+}
+
+if(Shield["anim",number] == 1)
+{
+    Shield["grow",number] = Shield["grow",number] + 0.3
+    holoScale(1,vec(0.1)+vec(Shield["grow",number]/52.3,Shield["grow",number],Shield["grow",number]))
+    Prop["ball",entity]:setAlpha(255-((Shield["grow",number]/7.8)*255))
+    
+    if(Shield["grow",number] >= 7.8)
+    {
+        Prop["ball",entity]:propDelete()
+        
+        Sound++
+        Prop[1,entity]:soundPlay(Sound,1,"Doors.CombineGate_citizen_stop1")
+        
+        holoPos(2,Prop[1,entity]:toWorld(vec(0,35.6,0)))
+        holoAlpha(2,255)
+        holoPos(3,Prop[1,entity]:toWorld(vec(0,-35.6,0)))
+        holoAlpha(3,255)
+        
+        Prop[2,entity] = propSpawn("models/hunter/blocks/cube05x1x05.mdl",Prop[1,entity]:toWorld(vec(-47.4,35.6,0)),Prop[1,entity]:angles()+ang(90),1)
+        Prop[2,entity]:setAlpha(0)
+        Prop[3,entity] = propSpawn("models/hunter/blocks/cube05x1x05.mdl",Prop[1,entity]:toWorld(vec(-47.4,-35.6,0)),Prop[1,entity]:angles()+ang(90),1)
+        Prop[3,entity]:setAlpha(0)
+        
+        Shield["anim",number] = 2
+        Shield["grow",number] = 0
+    }
+}
+elseif(Shield["anim",number] == 2)
+{
+    Shield["grow",number] = Shield["grow",number] + 0.01
+    
+    holoPos(2,holoEntity(2):toWorld(vec(0,-1.477,0)))
+    holoPos(3,holoEntity(3):toWorld(vec(0,-1.477,0)))
+    
+    if(Shield["grow",number] >= 0.315)
+    {
+        Sound+=2
+        Prop[1,entity]:soundPlay(Sound-1,1,"Doors.CombineGate_citizen_stop1")
+        Prop[2,entity]:soundPlay(Sound,1,"Doors.CombineGate_citizen_stop1")
+        
+        holoPos(4,Prop[1,entity]:toWorld(vec(-59.5,-35.6,0)))
+        holoAlpha(4,255)
+        holoPos(5,Prop[1,entity]:toWorld(vec(-59.5,35.6,0)))
+        holoAlpha(5,255)
+        holoPos(6,Prop[1,entity]:toWorld(vec(-36,0,0)))
+        holoPos(7,Prop[1,entity]:toWorld(vec(-36,0,0)))
+        
+        Prop[4,entity] = propSpawn("models/hunter/blocks/cube05x1x05.mdl",Prop[1,entity]:toWorld(vec(-59.5,0,0)),Prop[1,entity]:angles(),1)
+        Prop[4,entity]:setAlpha(0)
+        
+        Shield["anim",number] = 3
+        Shield["grow",number] = 0
+    }
+}
+elseif(Shield["anim",number] == 3)
+{
+    Shield["grow",number] = Shield["grow",number] + 0.01
+    
+    holoPos(4,holoEntity(4):toWorld(vec(0,1.2,0)))
+    holoPos(5,holoEntity(5):toWorld(vec(0,-1.2,0)))
+    holoAlpha(6,Shield["grow",number]*1270)
+    holoAlpha(7,Shield["grow",number]*1000)
+    
+    if(Shield["grow",number] >= 0.2)
+    {
+        holoPos(8,Prop[2,entity]:toWorld(vec(1,-23.65,11)))
+        holoAlpha(8,255)
+        holoPos(9,Prop[3,entity]:toWorld(vec(0,-23.65,11)))
+        holoAlpha(9,255)
+        
+        Sound+=2
+        Prop[4,entity]:soundPlay(Sound-1,1,"Doors.CombineGate_citizen_stop1")
+        Prop[5,entity]:soundPlay(Sound,1,"Doors.CombineGate_citizen_stop1")
+        
+        Prop[6,entity] = propSpawn("models/hunter/blocks/cube1x2x05.mdl",Prop[1,entity]:toWorld(vec(-24,64,-18)),Prop[1,entity]:angles()+ang(90,-45,90),1)
+        Prop[6,entity]:setAlpha(0)
+        Prop[7,entity] = propSpawn("models/hunter/blocks/cube1x2x05.mdl",Prop[1,entity]:toWorld(vec(-24,-64,-18)),Prop[1,entity]:angles()+ang(90,45,90),1)
+        Prop[7,entity]:setAlpha(0)
+        
+        Shield["anim",number] = 4
+        Shield["grow",number] = 0
+    }
+}
+elseif(Shield["anim",number] == 4)
+{
+    Shield["grow",number] = Shield["grow",number] + 0.2
+    
+    holoScale(8,vec(Shield["grow",number],Shield["grow",number]*1.98,0.24))
+    holoPos(8,holoEntity(8):toWorld(vec(2,0,0)))
+    
+    holoScale(9,vec(Shield["grow",number],Shield["grow",number]*1.98,0.24))
+    holoPos(9,holoEntity(9):toWorld(vec(2,0,0)))
+    
+    if(Shield["grow",number] >= 4)
+    {
+        holoPos(10,Prop[6,entity]:toWorld(vec(-13.5,-0.2,-12)))
+        holoAlpha(10,255)
+        holoPos(11,Prop[7,entity]:toWorld(vec(-13,-0.2,11.5)))
+        holoAlpha(11,255)
+        
+        Sound+=2
+        Prop[6,entity]:soundPlay(Sound-1,1,"Doors.CombineGate_citizen_stop1")
+        Prop[7,entity]:soundPlay(Sound,1,"Doors.CombineGate_citizen_stop1")
+        
+        holoScale(8,vec(4,7.91,0.24))
+        holoScale(9,vec(4,7.91,0.24))
+        
+        Prop[8,entity] = propSpawn("models/hunter/blocks/cube1x2x05.mdl",Prop[1,entity]:toWorld(vec(-24,82,-59)),Prop[1,entity]:angles()+ang(90,0,90),1)
+        Prop[8,entity]:setAlpha(0)
+        Prop[9,entity] = propSpawn("models/hunter/blocks/cube1x2x05.mdl",Prop[1,entity]:toWorld(vec(-24,-82,-59)),Prop[1,entity]:angles()+ang(90,0,90),1)
+        Prop[9,entity]:setAlpha(0)
+        
+        Shield["anim",number] = 5
+        Shield["grow",number] = 0
+    }
+}
+elseif(Shield["anim",number] == 5)
+{
+    Shield["grow",number] = Shield["grow",number] + 0.2
+    
+    holoScale(10,vec(Shield["grow",number],Shield["grow",number]*1.98,0.24))
+    holoPos(10,holoEntity(10):toWorld(vec(2,0,0)))
+    
+    holoScale(11,vec(Shield["grow",number],Shield["grow",number]*1.98,0.24))
+    holoPos(11,holoEntity(11):toWorld(vec(2,0,0)))
+    
+    if(Shield["grow",number] >= 4)
+    {
+        Sound+=2
+        Prop[8,entity]:soundPlay(Sound-1,1,"Doors.CombineGate_citizen_stop1")
+        Prop[9,entity]:soundPlay(Sound,1,"Doors.CombineGate_citizen_stop1")
+        
+        holoScale(10,vec(4,7.91,0.24))
+        holoScale(11,vec(4,7.91,0.24))
+        
+        Shield["anim",number] = 0
+        Shield["grow",number] = 0
+    }
+}
+
+if(Shield["throw",number])
+{
+    rangerFilter(players())
+    rangerFilter(Prop["ball",entity])
+    local Ranger = rangerOffset(5,Prop["ball",entity]:pos(),-Owner:up())
+    
+    if(Ranger:hit())
+    {
+        Sound++
+        Prop["ball",entity]:soundPlay(Sound,1,"NPC_CombineMine.OpenHooks")
+        Prop["ball",entity]:propFreeze(1)
+        Shield["throw",number] = 0
+        Shield["anim",number] = 1
+        
+        holoCreate(1,Ranger:pos(),vec(0.1),Prop["ball",entity]:angles()*ang(0,1,0),vec(255))
+        holoMaterial(1,"models/props_pipes/pipemetal001a")
+        
+        Sound++
+        holoEntity(1):soundPlay(Sound,2,"Streetwar.d3_c17_10b_doormove3")
+        
+        Prop[1,entity] = propSpawn("models/hunter/blocks/cube1x2x05.mdl",holoEntity(1):toWorld(vec(0,0,23.6)),holoEntity(1):angles()+ang(90,0,0),1)
+        Prop[1,entity]:setAlpha(0)
+        
+        holoCreate(2,holoEntity(1):pos(),vec(1.97,4,0.24),Prop[1,entity]:angles()+ang(90),vec(255))
+        holoCreate(3,holoEntity(1):pos(),vec(1.97,4,0.24),Prop[1,entity]:angles()+ang(90),vec(255))
+        holoCreate(4,holoEntity(1):pos(),vec(1.96,2.05,0.23),Prop[1,entity]:angles(),vec(255))
+        holoCreate(5,holoEntity(1):pos(),vec(1.96,2.05,0.23),Prop[1,entity]:angles(),vec(255))
+        holoCreate(6,holoEntity(1):pos(),vec(1.96,4,0.1),Prop[1,entity]:angles(),vec(0))
+        holoCreate(7,holoEntity(1):pos(),vec(1.96,4,0.1),Prop[1,entity]:angles(),vec(0))
+        holoCreate(8,holoEntity(1):pos(),vec(0.1,0.1,0.24),Prop[1,entity]:angles()+ang(90,-45,90),vec(255))
+        holoCreate(9,holoEntity(1):pos(),vec(0.1,0.1,0.24),Prop[1,entity]:angles()+ang(90,45,90),vec(255))
+        holoCreate(10,holoEntity(1):pos(),vec(0.1,0.1,0.24),Prop[1,entity]:angles()+ang(90,0,90),vec(255))
+        holoCreate(11,holoEntity(1):pos(),vec(0.1,0.1,0.24),Prop[1,entity]:angles()+ang(90,0,90),vec(255))
+        
+        holoClipEnabled(6,1)
+        holoClip(6,holoEntity(6):pos(),holoEntity(6):up(),1)
+        holoClipEnabled(7,1)
+        holoClip(7,holoEntity(7):pos(),-holoEntity(7):up(),1)
+        
+        for(U=2,11)
+        {
+            if(U != 6 && U != 7)
+            {
+                holoMaterial(U,"models/props_pipes/pipemetal001a")
+            }
+            
+            holoAlpha(U,0)
+        }
+    }
+}
+
+if(changed(Owner:keyPressed("T")) && Owner:keyPressed("T") && On)
+{
+    if(!Cooldown)
+    {
+        Sound+=2
+        Owner:soundPlay(Sound,1,"NPC_Combine.GrenadeLaunch")
+        Cooldown = 1
+        Shield["throw",number] = 1
+            
+        Prop["ball",entity] = propSpawn("models/sprops/geometry/sphere_6.mdl",Owner:shootPos()+Owner:eye()*20,Owner:eyeAngles()*ang(0,1,0),0)
+        Prop["ball",entity]:setMaterial("models/props_pipes/pipemetal001a")
+        Prop["ball",entity]:propFreeze(0)
+        Prop["ball",entity]:applyForce(Owner:eye()*8000+Owner:up()*5000)
+    }
+    elseif(!Shield["anim",number] && !Shield["throw",number])
+    {
+        Sound++
+        Owner:soundPlay(Sound,1,"NPC_CombineCamera.Active")
+        Cooldown = 0
+        
+        for(U=1,11)
+        {
+            holoDelete(U)
+            Prop[U,entity]:propDelete()
+        }
+        
+        hint("Retrieved Mobile Cover!",4)
+    }
+    else
+    {
+        Sound++
+        Owner:soundPlay(Sound,1,"NPC_CombineMine.Hop")
+        hint("Can not retrieve Mobile Cover right now!",4)
+    }
+}
+
+if(chatClk(Owner))
+{
+    local Said = Owner:lastSaid():lower():trim():explode(" ")
+    
+    if(Said[1,string][1] == "/")
+    {
+        hideChat(1)
+        
+        if(On)
+        {
+            switch(Said[1,string])
+            {
+                case "/help",
+                    hint("\"/shield\" disable/enable chat commands and placing function from this e2",10)
+                break
+            }
+        }
+        
+        if(Said[1,string] == "/shield")
+        {
+            On = 1-On
+            
+            if(On)
+            {
+                hint("GSM Shield turned ON!",4)
+            }
+            else
+            {
+                hint("GSM Shield turned OFF!",4)
+            }
+        }
+    }
+}

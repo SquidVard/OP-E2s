@@ -1,0 +1,195 @@
+@name E2 Superhero Pack (Superman Edition)
+@inputs EGP:wirelink
+@persist W T:entity P:array X:entity S N M UP DOWN L R I H:entity
+if(first()|dupefinished()) {
+printColor(vec(255,0,0),"======================")  
+printColor(vec(0,200,255)," E2 Mega Bundle")  
+printColor(vec(0,200,255)," By Ben Kern")  
+printColor(vec(255,0,0),"======================")  
+#changing this will mess up the entire E2!
+}
+
+if(S) {
+owner():soundPlay(1,0,"ambient/machines/beam_platform_loop1.wav")
+}
+
+
+
+if(W == 1) {
+interval(2000)
+owner():teleport(T:pos() + vec(0,30,20))
+}
+
+if(UP == 1) {
+interval(2000)
+owner():teleport(owner():pos() + vec(0,0,50))
+}
+
+if(DOWN == 1) {
+interval(2000)
+owner():teleport(owner():pos() - vec(0,0,50))
+}
+
+runOnTick(1)
+P = players()
+
+#Explode
+######################################################################################
+if((owner():keyAttack1()|owner():keyAttack2()) & owner():weapon():toString():find("fists",0)) {
+X = propSpawn("models/props_phx/amraam.mdl",owner():aimPos() + vec(0,0,50),1)
+X:propBreak()
+S = 1
+}
+else {
+X:propBreak()
+S = 0
+}
+
+#Teleport
+######################################################################################
+if(owner():keyPressed("UP") & owner():weapon():toString():find("fists")) {
+UP = 1
+}
+else {UP = 0}
+if(owner():keyPressed("DOWN")& owner():weapon():toString():find("fists")) {
+DOWN = 1
+}
+else {DOWN = 0}
+if(owner():keyPressed("ENTER") & !owner():isTyping() & owner():weapon():toString():find("fists",0) & T:isValid()) {
+    W = 1
+}
+else {W = 0}
+
+if(owner():keyPressed("BACKSPACE") & owner():weapon():toString():find("fists",0) & !owner():isTyping()) {    
+N = 0
+T = noentity()
+}
+
+#Target Switching
+######################################################################################
+if(owner():weapon():toString():find("fists",0) & !owner():keyPressed("RIGHT") & !owner():keyPressed("LEFT")) {
+I = I + 0.05
+}
+
+if(owner():weapon():toString():find("fists",0) & owner():keyPressed("RIGHT")) {
+R = 1
+}
+else {
+R = 0
+}
+if(owner():weapon():toString():find("fists",0) & owner():keyPressed("LEFT")) {
+L = 1
+}
+else {
+L = 0
+}
+        
+if(R == 1 & floor(I) > 0) {
+    I = 0
+    if(N < P:count()) {
+    interval(1000)
+    N = N + 1
+    }
+    else {N = 1}
+}
+if(L == 1 & floor(I) > 0) {
+    I = 0
+    if(N > 1) {
+    interval(1000)
+    N = N - 1
+    }
+    else {N = P:count()}
+}
+#Pulse Force
+######################################################################################
+if(owner():weapon():toString():find("fists",0) & !owner():isOnGround() & owner():keyPressed("MOUSE_MIDDLE")) {
+owner():applyPlayerForce(owner():aimPos()-owner():pos())
+}
+
+if(owner():weapon():toString():find("fists",0) & owner():isOnGround() & owner():keyPressed("MOUSE_MIDDLE")) {
+owner():teleport(owner():aimPos() + vec(0,0,20))
+}
+#Super Speed
+######################################################################################
+if(owner():weapon():toString():find("fists") & owner():keySprint() & owner():isOnGround() & owner():keyForward()) {
+owner():applyPlayerForce(vec(10000,0,0):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & owner():isOnGround() & owner():keyBack()) {
+owner():applyPlayerForce(vec(-10000,0,0):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & owner():isOnGround() & owner():keyLeft()) {
+owner():applyPlayerForce(vec(0,10000,0):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & owner():isOnGround() & owner():keyRight()) {
+owner():applyPlayerForce(vec(0,-10000,0):rotate(owner():angles()))    
+}
+
+#Flight
+if(owner():weapon():toString():find("fists") & owner():keySprint() & !owner():isOnGround() & owner():keyForward()) {
+owner():applyPlayerForce(vec(100000,0,30):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & !owner():isOnGround() & owner():keyBack()) {
+owner():applyPlayerForce(vec(-100000,0,30):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & !owner():isOnGround() & owner():keyLeft()) {
+owner():applyPlayerForce(vec(0,100000,30):rotate(owner():angles()))    
+}
+if(owner():weapon():toString():find("fists") & owner():keySprint() & !owner():isOnGround() & owner():keyRight()) {
+owner():applyPlayerForce(vec(0,-100000,30):rotate(owner():angles()))    
+}
+#Weapon Checker
+######################################################################################
+if(owner():weapon():toString():find("fists",0)) {
+
+    if(owner():keyJump()) {
+    owner():applyPlayerForce(vec(0,0,200000))
+    }
+    
+    if(owner():keyDuck() & !owner():isOnGround() & !owner():keyJump()) {
+    owner():applyPlayerForce(vec(0,0,-200000))
+    }
+    if(owner():keyPressed("PAD_1")) {
+    owner():teleport(entity():pos() + vec(0,0,50))
+}
+    if(owner():keyPressed("PAD_2") & map() == "gm_bigcity") {
+    owner():teleport(vec(9055,10018,-10895))	
+    }
+    if(owner():keyPressed("PAD_3") & map() == "gm_bigcity") {
+    owner():teleport(vec(-705,-6981,448))	
+    }
+    if(owner():keyPressed("PAD_4") & map() == "gm_bigcity") {
+    owner():teleport(vec(4610,17,-8639))	
+    }
+    if(owner():keyPressed("PAD_5") & map() == "gm_bigcity") {
+    owner():teleport(vec(-538,-1804,-11135))	
+    }
+    if(owner():keyPressed("PAD_6") & map() == "gm_bigcity") {
+    owner():teleport(vec(-12138,10916,-11135))	
+}
+    if(owner():keyPressed("PAD_7") & map() == "gm_bigcity") {
+    owner():teleport(vec(-9514,876,-11135))
+    }
+    if(owner():keyPressed("PAD_8") & map() == "gm_bigcity") {
+    owner():teleport(vec(-666,2521,4416))
+    }
+    if(owner():keyPressed("PAD_9") & map() == "gm_bigcity") {
+    owner():teleport(vec(2136,1332,-9087))
+    }
+    
+    T = P[N,entity]
+    
+    
+    EGP:egpRoundedBox(1,vec2(egpScrW(owner())/2,egpScrH(owner()) - 30), vec2(egpScrW(owner()) - 10,30))
+    EGP:egpText(2,"Current Target:     " + T:name(),vec2(100,egpScrH(owner()) - 38))
+    EGP:egpFont(2,"Coolvetica",24)
+    EGP:egpColor(1,vec(0,157,255))
+    EGP:egpColor(2,vec(255,255,0))
+
+}
+else {EGP:egpClear(), soundStop(1,0)}
+if(owner():weapon():toString():find("stun",0) == 0 & owner():weapon():toString():find("crow",0) == 0 & owner():weapon():toString():find("fists",0) == 0 & owner():weapon():toString():find("frag",0) == 0) {
+owner():enableFallDamage()
+}
+else {
+owner():disableFallDamage()
+}
